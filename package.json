@@ -1,10 +1,10 @@
 {
-  "name": "osm-p2p-server",
+  "name": "hyperdb-osm-server",
   "version": "2.3.5",
   "description": "Peer-to-peer OpenStreetMap API v0.6 Server",
   "main": "index.js",
   "bin": {
-    "osm-p2p-server": "bin/cmd.js"
+    "hyperdb-osm-server": "bin/cmd.js"
   },
   "keywords": [
     "open street map",
@@ -12,6 +12,7 @@
     "OSM",
     "peer-to-peer",
     "osm-p2p",
+    "hyperdb",
     "server",
     "p2p",
     "maps",
@@ -89,10 +90,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/digidem/osm-p2p-server.git"
+    "url": "git+https://github.com/digidem/hyperdb-osm-server.git"
   },
   "bugs": {
-    "url": "https://github.com/digidem/osm-p2p-server/issues"
+    "url": "https://github.com/digidem/hyperdb-osm-server/issues"
   },
-  "homepage": "https://github.com/digidem/osm-p2p-server#readme"
+  "homepage": "https://github.com/digidem/hyperdb-osm-server#readme"
 }

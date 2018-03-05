@@ -71,7 +71,7 @@ function validateChangesetIds (changes, id, cb) {
 var SKIP_PROPS = ['action', 'id', 'version', 'ifUnused', 'old_id']
 
 /**
- * Turn a changeset operation into a osm-p2p-db batch operation
+ * Turn a changeset operation into a hyperdb-osm batch operation
  */
 function batchMap (change) {
   var op = {

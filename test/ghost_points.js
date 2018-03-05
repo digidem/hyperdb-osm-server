@@ -152,7 +152,7 @@ test('do not include points from an excluded way fork', function (t) {
     })
   }
 
-  // 7. Create an osm-p2p-server instance from fork A
+  // 7. Create an hyperdb-osm-server instance from fork A
   function step7 (done) {
     createServer(osmBase.db.key, function (d) {
       osmServer = d
@@ -337,7 +337,7 @@ test('no extra points from forks /w 1 deleted node and 1 modified node', functio
     })
   }
 
-  // 7. Create an osm-p2p-server instance
+  // 7. Create an hyperdb-osm-server instance
   function step7 (done) {
     createServer(osmBase.db.key, function (d) {
       osmServer = d

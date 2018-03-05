@@ -10,7 +10,7 @@ var refs2nodes = require('../lib/util').refs2nodes
 /**
  * Get the changes in a changeset, as `cb(err, changes)` or as a stream
  * @param  {string}   id  Changeset ID
- * @param  {Object}   osm osm-p2p-db instance
+ * @param  {Object}   osm hyperdb-osm instance
  * @param  {Function} cb  callback(err, array of elements from changeset)
  *                        Elements have the property 'action' which is one of
  *                        create|modify|delete

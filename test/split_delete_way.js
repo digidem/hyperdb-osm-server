@@ -68,7 +68,7 @@ test('create way with changeset upload', function (t) {
       versions[c.attributes.old_id] = c.attributes.new_version
     })
   }))
-  hq.end(`<osmChange version="0.6" generator="osm-p2p-server test">
+  hq.end(`<osmChange version="0.6" generator="hyperdb-osm-server test">
     <create>
       <node id="-1" lat="64.0" lon="-121.0" version="0" changeset="${changeId}"/>
       <node id="-2" lat="64.1" lon="-121.1" version="0" changeset="${changeId}"/>
