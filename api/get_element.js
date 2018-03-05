@@ -13,7 +13,8 @@ module.exports = function (osm) {
     }
     opts = opts || {}
     if (opts.history) {
-      getHistory(id, cb)
+      cb(new Error('NOT IMPLEMENTED'))
+      // getHistory(id, cb)
     } else if (opts.version) {
       getVersion(id, opts.version, cb)
     } else {
@@ -29,7 +30,7 @@ module.exports = function (osm) {
       forks = forks.map(function (key) {
         return xtend(docs[key], {
           id: id,
-          version: key
+          version: docs[key].version
         })
       }).map(refs2nodes)
       cb(null, forks)
@@ -37,37 +38,34 @@ module.exports = function (osm) {
   }
 
   function getVersion (id, version, cb) {
-    osm.log.get(version, function (err, doc) {
+    osm.getByVersion(version, function (err, doc) {
       if (err && (/^notfound/.test(err) || err.notFound)) {
         err = errors(404, err)
       }
       if (err) return cb(err)
-      var element = xtend(doc.value.v, {
-        id: id,
-        version: version
-      })
-      cb(null, refs2nodes(element))
+      cb(null, refs2nodes(doc))
     })
   }
 
-  function getHistory (id, cb) {
-    var r = osm.kv.createHistoryStream(id).on('error', function (err) {
-      if (/^notfound/i.test(err) || err.notFound) {
-        err = new errors.NotFound('element id: ' + id)
-      }
-      if (cb) return cb(err)
-      if (stream) return stream.emit('error', err)
-    })
-    if (cb) {
-      collect(r, function (err, rows) {
-        if (err) return cb(err)
-        cb(null, rows.map(rowMap))
-      })
-    } else {
-      var stream = r.pipe(mapStream.obj(rowMap))
-      return stream
-    }
-  }
+  // function getHistory (id, cb) {
+  //   // TODO: use hyperdb's gethistorystream (better: expose on hyperdb-osm)
+  //   var r = osm.kv.createHistoryStream(id).on('error', function (err) {
+  //     if (/^notfound/i.test(err) || err.notFound) {
+  //       err = new errors.NotFound('element id: ' + id)
+  //     }
+  //     if (cb) return cb(err)
+  //     if (stream) return stream.emit('error', err)
+  //   })
+  //   if (cb) {
+  //     collect(r, function (err, rows) {
+  //       if (err) return cb(err)
+  //       cb(null, rows.map(rowMap))
+  //     })
+  //   } else {
+  //     var stream = r.pipe(mapStream.obj(rowMap))
+  //     return stream
+  //   }
+  // }
 }
 
 function rowMap (row) {

@@ -297,9 +297,9 @@ test('second changeset upload', function (t) {
   function onold (body) {
     var xml = parsexml(body)
     t.equal(xml.root.name, 'osm')
-    t.true(isISODate(xml.root.children[0].attributes.timestamp))
-    delete xml.root.children[0].attributes.timestamp
-    t.deepEqual(xml.root.children, [
+    t.true(isISODate(xml.root.children[0].children[0].attributes.timestamp))
+    delete xml.root.children[0].children[0].attributes.timestamp
+    t.deepEqual(xml.root.children[0].children, [
       {
         name: 'node',
         attributes: {

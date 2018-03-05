@@ -136,15 +136,16 @@ test('get osmchange doc from upload', function (t) {
     t.equal(xml.root.name, 'osmChange')
     t.equal(xml.root.children.length, 1)
     t.equal(xml.root.children[0].name, 'create')
-    xml.root.children[0].children.sort(cmpch)
-    xml.root.children[0].children.forEach(function (c) {
+    var nodes = xml.root.children[0].children
+    nodes.sort(cmpch)
+    nodes.forEach(function (c) {
       c.children.sort(cmpref)
     })
-    xml.root.children[0].children.forEach(function (c) {
+    nodes.forEach(function (c) {
       t.true(isISODate(c.attributes.timestamp))
       delete c.attributes.timestamp
     })
-    t.deepEqual(xml.root.children[0].children, expected)
+    t.deepEqual(nodes, expected)
   }))
 })
 
@@ -297,9 +298,9 @@ test('second changeset upload', function (t) {
   function onold (body) {
     var xml = parsexml(body)
     t.equal(xml.root.name, 'osm')
-    t.true(isISODate(xml.root.children[0].attributes.timestamp))
-    delete xml.root.children[0].attributes.timestamp
-    t.deepEqual(xml.root.children, [
+    t.true(isISODate(xml.root.children[0].children[0].attributes.timestamp))
+    delete xml.root.children[0].children[0].attributes.timestamp
+    t.deepEqual(xml.root.children[0].children, [
       {
         name: 'node',
         attributes: {

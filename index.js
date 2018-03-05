@@ -1,4 +1,4 @@
-var error = require('debug')('osm-p2p-server:error')
+var error = require('debug')('hyperdb-osm:error')
 
 var errors = require('./errors')
 var router = require('./routes')

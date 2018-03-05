@@ -10,7 +10,7 @@ var refs2nodes = require('../lib/util').refs2nodes
 /**
  * Get the changes in a changeset, as `cb(err, changes)` or as a stream
  * @param  {string}   id  Changeset ID
- * @param  {Object}   osm osm-p2p-db instance
+ * @param  {Object}   osm hyperdb-osm instance
  * @param  {Function} cb  callback(err, array of elements from changeset)
  *                        Elements have the property 'action' which is one of
  *                        create|modify|delete
@@ -31,7 +31,7 @@ module.exports = function (osm) {
         return onError(new errors.NotFound('changeset id: ' + id))
       }
       // An object stream {key: versionId, value: 0}
-      var r = osm.changeset.list(id, opts)
+      var r = osm.getChanges(id)
       r.on('error', onError)
       r.pipe(stream)
     })
@@ -46,15 +46,14 @@ module.exports = function (osm) {
 
     function getDoc (row, enc, next) {
       var self = this
-      osm.log.get(row.key, function (err, doc) {
+      osm.getByVersion(row.version, function (err, element) {
         if (err) return next(err)
-        var element = xtend(doc.value.v, {
-          id: doc.value.k,
-          version: doc.key,
-          action: getAction(doc)
+        getElementAction(osm, element, function (err, action) {
+          if (err) return next(err)
+          element.action = action
+          self.push(refs2nodes(element))
+          next()
         })
-        self.push(refs2nodes(element))
-        next()
       })
     }
 
@@ -74,8 +73,14 @@ function isChangeset (docs) {
   return result
 }
 
-function getAction (doc) {
-  if (doc.links.length === 0 && doc.value.d === undefined) return 'create'
-  if (doc.links.length > 0 && doc.value.d === undefined) return 'modify'
-  if (doc.value.d !== undefined) return 'delete'
+// HyperDB, OsmElement => String
+function getElementAction (db, element, cb) {
+  if (element.deleted) {
+    return process.nextTick(cb, null, 'delete')
+  }
+  db.getPreviousHeads(element.version, function (err, elms) {
+    if (err) return cb(err)
+    if (elms.length > 0) cb(null, 'modify')
+    else cb(null, 'create')
+  })
 }
